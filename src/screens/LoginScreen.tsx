@@ -40,9 +40,8 @@ export default function LoginScreen({ navigation }: any) {
       });
 
       const { token, data } = response.data;
-
+      await signIn(token, data);
       Alert.alert("Sukses", `Selamat datang kembali, ${data.fullName}!`);
-      await signIn(token);
     } catch (error: any) {
       const errorMsg =
         error.response?.data?.message || "Terjadi kesalahan koneksi.";

@@ -2,7 +2,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
-import StoreScreen from "../screens/AnalyticsScreen";
 import DetailScreen from "../screens/DetailScreen";
 import LoginScreen from "../screens/LoginScreen";
 import {
@@ -49,17 +48,17 @@ function BottomTabs() {
       <Tab.Screen
         name="AnalyticsTab"
         component={AnalyticsScreen}
-        options={{ title: "Analytics" }}
+        options={{ title: "Analytics", headerShown: false }}
       ></Tab.Screen>
       <Tab.Screen
         name="ActivityTab"
         component={ActivityScreen}
-        options={{ title: "Activity" }}
+        options={{ title: "Activity", headerShown: false }}
       ></Tab.Screen>
       <Tab.Screen
         name="ProfileTab"
         component={ProfileScreen}
-        options={{ title: "Profile" }}
+        options={{ title: "Profile", headerShown: false }}
       ></Tab.Screen>
     </Tab.Navigator>
   );

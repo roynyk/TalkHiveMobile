@@ -17,7 +17,7 @@ function FloatingThemeToggle() {
   return (
     <TouchableOpacity
       onPress={toggleColorScheme}
-      className="absolute z-50 items-center justify-center bg-white border rounded-full shadow-lg bottom-24 right-6 w-14 h-14 dark:bg-black border-slate-200 dark:border-slate-800"
+      className="absolute z-50 items-center justify-center bg-white border rounded-full shadow-lg bottom-32 right-6 w-14 h-14 dark:bg-black border-slate-200 dark:border-slate-800"
     >
       <Text className="text-xl">{colorScheme === "dark" ? "🌙" : "☀️"}</Text>
     </TouchableOpacity>
@@ -25,14 +25,13 @@ function FloatingThemeToggle() {
 }
 
 export default function App() {
-  // 2. Ambil status colorScheme di sini
+  // Ambil status colorScheme di sini
   const { colorScheme } = useColorScheme();
 
   return (
     <SafeAreaProvider>
       <AuthProvider>
         <View style={{ flex: 1 }}>
-          {/* 3. Pasang tema dinamis di NavigationContainer */}
           <NavigationContainer
             theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
           >
