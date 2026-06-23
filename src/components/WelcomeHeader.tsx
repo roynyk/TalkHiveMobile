@@ -20,7 +20,8 @@ export default function WelcomeHeader() {
         source={{
           uri:
             getImageUrl(user?.photoProfile) ||
-            "https://ui-avatars.com/api/?name=User",
+            "https://ui-avatars.com/api/?name=" +
+              encodeURIComponent(user?.fullName || "U"),
         }}
         className="w-12 h-12 border rounded-full border-slate-100 dark:border-slate-800"
       />

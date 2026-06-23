@@ -9,12 +9,11 @@ import {
   Modal,
 } from "react-native";
 import api from "../services/api";
-
-// Komponen UI kita
 import TopCard from "@/components/TopCard";
 import { Text } from "@/components/ui/text";
 import CardThread from "@/components/CardThread";
 import { Ionicons } from "@expo/vector-icons";
+import { AnalyticSkeleton } from "@/components/Skeletons";
 
 const rangeOptions = [
   { label: "Last 7 Days", value: "7" },
@@ -58,7 +57,7 @@ export default function AnalyticsScreen() {
 
       <View className="flex-row items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800">
         <Text className="text-xs font-bold tracking-wider uppercase text-slate-400 dark:text-slate-500">
-          Recent Activity
+          Performance Ranking
         </Text>
         {/* Tombol Dropdown Custom */}
         <TouchableOpacity
@@ -120,8 +119,12 @@ export default function AnalyticsScreen() {
       </Modal>
 
       {loading ? (
-        <View className="items-center justify-center flex-grow">
-          <ActivityIndicator size="large" color="#0062ff" />
+        <View>
+          <AnalyticSkeleton />
+          <AnalyticSkeleton />
+          <AnalyticSkeleton />
+          <AnalyticSkeleton />
+          <AnalyticSkeleton />
         </View>
       ) : (
         <FlatList
@@ -146,7 +149,7 @@ export default function AnalyticsScreen() {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              colors={["#000000"]}
+              colors={["#0062ff"]}
             />
           }
           // Empty State jika user belum memposting thread apa pun

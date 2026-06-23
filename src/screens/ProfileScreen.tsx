@@ -13,12 +13,15 @@ import api from "../services/api";
 import { getImageUrl } from "../utils";
 import { Text } from "@/components/ui/text";
 import { Card } from "@/components/ui/card";
+import EditProfileModal from "@/components/EditProfileModal";
+import { ProfileSkeleton } from "@/components/Skeletons";
 
 export default function ProfileScreen() {
   const { signOut } = useAuth();
   const [userData, setUserData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -44,9 +47,7 @@ export default function ProfileScreen() {
   return (
     <View className="flex-1 bg-slate-50 dark:bg-slate-950">
       {loading ? (
-        <View className="items-center justify-center flex-grow">
-          <ActivityIndicator size="large" color="#0062ff" />
-        </View>
+        <ProfileSkeleton />
       ) : (
         <ScrollView
           refreshControl={
@@ -69,7 +70,10 @@ export default function ProfileScreen() {
             <View className="relative rounded-full shadow-md">
               <Image
                 source={{
-                  uri: getImageUrl(userData?.photoProfile) || `U`,
+                  uri:
+                    getImageUrl(userData?.photoProfile) ||
+                    "https://ui-avatars.com/api/?name=" +
+                      encodeURIComponent(userData?.fullName || "U"),
                 }}
                 className="border-4 border-white rounded-full w-28 h-28 dark:border-slate-900"
               />
@@ -106,10 +110,13 @@ export default function ProfileScreen() {
             </View>
           </View>
 
-          {/* B. Menu Pilihan List (Static) */}
+          {/* B. Menu Pilihan List */}
           <Card className="mb-6 overflow-hidden bg-white border shadow-sm dark:bg-slate-900 border-slate-100 dark:border-slate-800/80 rounded-2xl">
-            {/* 1. Edit Profile */}
-            <TouchableOpacity className="flex-row items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800/60 active:bg-slate-50 dark:active:bg-slate-850">
+            {/* Tombol Edit Profile - Membuka Modal */}
+            <TouchableOpacity
+              onPress={() => setEditModalVisible(true)}
+              className="flex-row items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800/60 active:bg-slate-50 dark:active:bg-slate-800/50"
+            >
               <View className="flex-row items-center gap-3">
                 <Ionicons name="person-outline" size={20} color="#64748b" />
                 <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
@@ -119,8 +126,8 @@ export default function ProfileScreen() {
               <Ionicons name="chevron-forward" size={16} color="#cbd5e1" />
             </TouchableOpacity>
 
-            {/* 2. Preferences */}
-            <TouchableOpacity className="flex-row items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800/60 active:bg-slate-50 dark:active:bg-slate-850">
+            {/* Preferences */}
+            <TouchableOpacity className="flex-row items-center justify-between p-4 border-b border-slate-100 dark:border-slate-800/60 active:bg-slate-50 dark:active:bg-slate-800/50">
               <View className="flex-row items-center gap-3">
                 <Ionicons name="options-outline" size={20} color="#64748b" />
                 <Text className="text-sm font-semibold text-slate-700 dark:text-slate-200">
@@ -130,8 +137,8 @@ export default function ProfileScreen() {
               <Ionicons name="chevron-forward" size={16} color="#cbd5e1" />
             </TouchableOpacity>
 
-            {/* 3. Privacy */}
-            <TouchableOpacity className="flex-row items-center justify-between p-4 active:bg-slate-50 dark:active:bg-slate-850">
+            {/* Privacy */}
+            <TouchableOpacity className="flex-row items-center justify-between p-4 active:bg-slate-50 dark:active:bg-slate-800/50">
               <View className="flex-row items-center gap-3">
                 <Ionicons
                   name="lock-closed-outline"
@@ -146,7 +153,7 @@ export default function ProfileScreen() {
             </TouchableOpacity>
           </Card>
 
-          {/* C. Tombol Logout Pink/Merah Cantik */}
+          {/* C. Tombol Logout */}
           <TouchableOpacity
             onPress={signOut}
             className="flex-row items-center justify-center gap-2 py-4 bg-red-50 dark:bg-red-950/20 rounded-2xl active:bg-red-100 dark:active:bg-red-950/40"
@@ -158,6 +165,14 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </ScrollView>
       )}
+
+      <EditProfileModal
+        visible={editModalVisible}
+        onClose={() => setEditModalVisible(false)}
+        onSaveSuccess={(updatedData) => setUserData(updatedData)}
+        currentName={userData?.fullName || ""}
+        currentBio={userData?.bio || ""}
+      />
     </View>
   );
 }

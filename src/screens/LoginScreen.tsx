@@ -15,6 +15,7 @@ import { useAuth } from "../context/AuthContext";
 
 import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
+import { loginSchema } from "@/validations/auth-validation";
 
 export default function LoginScreen({ navigation }: any) {
   const [validation, setValidation] = useState("");
@@ -29,6 +30,14 @@ export default function LoginScreen({ navigation }: any) {
   const handleLogin = async () => {
     if (!validation || !password) {
       Alert.alert("Error", "Semua field harus diisi!");
+      return;
+    }
+
+    const result = loginSchema.safeParse({ validation, password });
+
+    if (!result.success) {
+      const firstError = result.error.issues[0]?.message || "Validasi Gagal";
+      Alert.alert("Validasi Gagal", firstError);
       return;
     }
 

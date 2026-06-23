@@ -28,3 +28,21 @@ export function formatTimeAgo(dateString: string) {
   const diffInDays = Math.floor(diffInHours / 24);
   return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
 }
+
+export function getQuickInsight(metriks: any) {
+  if (!metriks?.likes || !metriks?.replies)
+    return "Calculating your metrics...";
+
+  const likesGrowth = parseFloat(metriks.likes.growth || "0");
+  const repliesGrowth = parseFloat(metriks.replies.growth || "0");
+
+  const average = (likesGrowth + repliesGrowth) / 2;
+
+  if (average > 0) {
+    return `Your engagement is up ${average.toFixed(1)}% this week!`;
+  } else if (average < 0) {
+    return `Your engagement is down ${Math.abs(average).toFixed(1)}% this week!`;
+  } else {
+    return "Your engagement is stable this week!";
+  }
+}

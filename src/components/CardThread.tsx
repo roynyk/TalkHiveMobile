@@ -1,8 +1,6 @@
 import React from "react";
 import { View, Image } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-
-// Komponen UI dasar kita
 import { Card } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 import { getImageUrl } from "@/utils";

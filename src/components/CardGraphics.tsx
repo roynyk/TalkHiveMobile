@@ -2,12 +2,9 @@ import React from "react";
 import { View } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useColorScheme } from "nativewind";
-
-// Komponen UI dasar kita
 import { Card } from "@/components/ui/card";
 import { Text } from "@/components/ui/text";
 
-// Definisi properti yang diterima oleh komponen
 interface CardGraphicsProps {
   iconName: keyof typeof MaterialIcons.glyphMap;
   value: string;

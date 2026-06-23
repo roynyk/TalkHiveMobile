@@ -6,7 +6,6 @@ import { Text } from "@/components/ui/text";
 import { useAuth } from "@/context/AuthContext";
 import { getImageUrl } from "@/utils";
 
-// Definisi properti dinamis
 interface TopCardProps {
   title: string;
   iconName?: keyof typeof MaterialIcons.glyphMap;
@@ -34,7 +33,8 @@ export default function TopCard({ title, iconName }: TopCardProps) {
         source={{
           uri:
             getImageUrl(user?.photoProfile) ||
-            "https://ui-avatars.com/api/?name=User",
+            "https://ui-avatars.com/api/?name=" +
+              encodeURIComponent(user?.fullName || "U"),
         }}
         className="w-10 h-10 border rounded-full border-slate-100 dark:border-slate-800"
       />

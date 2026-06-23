@@ -12,11 +12,14 @@ import TopCard from "@/components/TopCard";
 import { Text } from "@/components/ui/text";
 import { getImageUrl } from "@/utils";
 import { formatTimeAgo } from "@/utils";
+import { useAuth } from "@/context/AuthContext";
+import { ActivitySkeleton } from "@/components/Skeletons";
 
 export default function ActivityScreen() {
   const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchActivities();
@@ -44,8 +47,19 @@ export default function ActivityScreen() {
       <TopCard title="Creator Hub" iconName="notifications" />
 
       {loading ? (
-        <View className="items-center justify-center flex-grow">
-          <ActivityIndicator size="large" color="#0062ff" />
+        <View>
+          <ActivitySkeleton />
+          <ActivitySkeleton />
+          <ActivitySkeleton />
+          <ActivitySkeleton />
+          <ActivitySkeleton />
+          <ActivitySkeleton />
+          <ActivitySkeleton />
+          <ActivitySkeleton />
+          <ActivitySkeleton />
+          <ActivitySkeleton />
+          <ActivitySkeleton />
+          <ActivitySkeleton />
         </View>
       ) : (
         <FlatList
@@ -84,7 +98,10 @@ export default function ActivityScreen() {
                 <View className="relative mr-3">
                   <Image
                     source={{
-                      uri: getImageUrl(item.user.photoProfile) || "U",
+                      uri:
+                        getImageUrl(item.user.photoProfile) ||
+                        "https://ui-avatars.com/api/?name=" +
+                          encodeURIComponent(item.user?.fullName || "U"),
                     }}
                     className="w-12 h-12 border rounded-full border-slate-100 dark:border-slate-800"
                   />

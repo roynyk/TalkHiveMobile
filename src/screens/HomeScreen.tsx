@@ -1,23 +1,20 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  TouchableOpacity,
-  ScrollView,
-  ActivityIndicator,
-  RefreshControl,
-} from "react-native";
-import { useAuth } from "../context/AuthContext";
-
-// Import Komponen Kita
+import { View, ScrollView, RefreshControl } from "react-native";
 import WelcomeHeader from "../components/WelcomeHeader";
 import CardGraphics from "../components/CardGraphics";
+import WeeklyTrend from "../components/WeeklyTrend";
+import {
+  HomeSkeleton,
+  InsightSkeleton,
+  TrendSkeleton,
+} from "@/components/Skeletons";
 import { Text } from "@/components/ui/text";
 import api from "@/services/api";
-import WeeklyTrend from "@/components/WeeklyTrend";
+import { getQuickInsight } from "@/utils";
 
 export default function HomeScreen({ navigation }: any) {
   const [metriks, setMetriks] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -26,6 +23,7 @@ export default function HomeScreen({ navigation }: any) {
 
   const fetchMetriks = async () => {
     try {
+      setLoading(true);
       const reponse = await api.get("/mobile/home");
       setMetriks(reponse.data.data);
     } catch (error) {
@@ -46,36 +44,45 @@ export default function HomeScreen({ navigation }: any) {
     if (growth.startsWith("-")) return "down";
     return "up";
   };
+
   return (
     <View className="flex-1 bg-white dark:bg-slate-900">
       <WelcomeHeader />
-      {/* Kita gunakan ScrollView agar layar nyaman di-scroll jika ada banyak card */}
-      {loading ? (
-        <View className="items-center justify-center flex-grow">
-          <ActivityIndicator size="large" color="#0062ff" />
-        </View>
-      ) : (
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={onRefresh}
-              colors={["#0062ff"]}
-            />
-          }
-          contentContainerStyle={{ paddingBottom: 40 }}
-          className="flex-1 px-5 pt-6"
-        >
+
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={["#0062ff"]}
+          />
+        }
+        contentContainerStyle={{ paddingBottom: 40 }}
+        className="flex-1 px-5 pt-6"
+      >
+        {/* A. SKELETON / INSIGHT BANNER */}
+        {loading ? (
+          <InsightSkeleton />
+        ) : (
           <View className="p-4 mb-4 border bg-slate-50 dark:bg-slate-950 border-slate-100 dark:border-slate-800/80 rounded-2xl">
             <Text className="text-xs font-bold text-blue-600 uppercase">
               Quick Insight
             </Text>
             <Text className="mt-1 text-sm font-semibold text-slate-700 dark:text-slate-300">
-              Your engagement is up 12% this week!
+              {getQuickInsight(metriks)}
             </Text>
           </View>
+        )}
 
-          {/* Grid Utama */}
+        {/* B. SKELETON / GRID 2x2 METRIKS */}
+        {loading ? (
+          <View className="flex-row flex-wrap justify-between mb-6 gap-y-4">
+            <HomeSkeleton />
+            <HomeSkeleton />
+            <HomeSkeleton />
+            <HomeSkeleton />
+          </View>
+        ) : (
           <View className="flex-row flex-wrap justify-between mb-6 gap-y-4">
             <CardGraphics
               iconName="people-outline"
@@ -106,9 +113,9 @@ export default function HomeScreen({ navigation }: any) {
               trend={getTrend(metriks?.replies?.growth)}
             />
           </View>
-          <WeeklyTrend />
-        </ScrollView>
-      )}
+        )}
+        {loading ? <TrendSkeleton /> : <WeeklyTrend />}
+      </ScrollView>
     </View>
   );
 }
